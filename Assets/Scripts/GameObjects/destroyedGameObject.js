@@ -1,0 +1,3 @@
+class DestroyedGameObject extends GameObject{
+
+}
