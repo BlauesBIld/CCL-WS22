@@ -13,6 +13,8 @@ class AttackBall extends ImageObject {
         y: 0,
     };
 
+    attackBallSpeed = 7;
+
     constructor(name, src, size, dirX, dirY) {
         super(name, src, player.position.x + (player.dimensions.width / 2) - size / 2, player.position.y - 50, size, size);
 
@@ -31,8 +33,8 @@ class AttackBall extends ImageObject {
     }
 
     update() {
-        this.position.x += this.directionXNormalised * 5;
-        this.position.y += this.directionYNormalised * 5;
+        this.position.x += this.directionXNormalised * this.attackBallSpeed * gameManager.deltaTime;
+        this.position.y += this.directionYNormalised * this.attackBallSpeed * gameManager.deltaTime;
         if (this.timeStampCreated + this.lifespan < Date.now()) {
             this.destroy();
             delete this;
@@ -40,7 +42,6 @@ class AttackBall extends ImageObject {
     }
 
     draw() {
-        this.image.src = this.imageFilePath
         gameManager.gameCanvas.drawLayer.save();
         gameManager.gameCanvas.drawLayer.translate(this.position.x + (this.dimensions.width / 2), this.position.y + (this.dimensions.width / 2));
         gameManager.gameCanvas.drawLayer.rotate((Math.atan2(this.directionY, this.directionX) * 180 / Math.PI + 90) * Math.PI / 180);

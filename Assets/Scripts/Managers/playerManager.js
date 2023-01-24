@@ -53,23 +53,26 @@ class PlayerManager {
 
     calculateStat(statName) {
         this[statName].value = this[statName].base;
+        let additionForCurrentLevel = (Math.sqrt(this.currentLevel)*10);
+        if(statName === "magicCrit"){
+            additionForCurrentLevel = this.currentLevel;
+        }
         if (this.equipped.weapon !== undefined) {
-            this[statName].value += this.equipped.weapon[statName];
+            this[statName].value += this.equipped.weapon[statName] + additionForCurrentLevel;
         }
         if (this.equipped.robe !== undefined) {
-            this[statName].value += this.equipped.robe[statName];
+            this[statName].value += this.equipped.robe[statName] + additionForCurrentLevel;
         }
         if (this.equipped.hat !== undefined) {
-            this[statName].value += this.equipped.hat[statName];
+            this[statName].value += this.equipped.hat[statName] + additionForCurrentLevel;
         }
         if (this.equipped.accessory !== undefined) {
-            this[statName].value += this.equipped.accessory[statName];
+            this[statName].value += this.equipped.accessory[statName] + additionForCurrentLevel;
         }
     }
 
     equipItem(itemType, itemName) {
         this.equipped[itemType] = items[itemType][itemName];
-        this.recalculateStats();
         uiManager.initializePage();
     }
 
@@ -81,8 +84,21 @@ class PlayerManager {
         return 600 - this.spellCastRate.value;
     }
 
+    getSpellCastRateToDisplay(){
+        return this.spellCastRate.value;
+    }
+
     getMagicCrit() {
         return this.magicCrit.value;
     }
 
+    gainExperience(amountOfExpPoints) {
+        this.currentExpPoints += amountOfExpPoints;
+        if (this.currentExpPoints >= this.maxExpPoints) {
+            this.currentExpPoints = 0;
+            this.maxExpPoints += 20;
+            this.currentLevel++;
+            uiManager.initializePage();
+        }
+    }
 }

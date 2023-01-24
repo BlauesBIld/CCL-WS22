@@ -1,4 +1,4 @@
-class TitleObject extends GameObject {
+class FadingTitleText extends GameObject {
     text;
     currentTransparancy;
     timeStampCreated;

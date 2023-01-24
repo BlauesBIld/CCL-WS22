@@ -1,4 +1,4 @@
-class PlayerObject extends ImageObject {
+class Player extends ImageObject {
     timeStampLastTimeAttackBallFired = 0;
     isShooting = false;
 
@@ -32,7 +32,7 @@ class PlayerObject extends ImageObject {
     update() {
         this.move();
         this.isThePlayerInTheSafeZone();
-        if (this.isShooting) {
+        if (this.isShooting && waveManager.waveActive) {
             this.shoot();
             this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.BACK;
         }
@@ -41,7 +41,7 @@ class PlayerObject extends ImageObject {
             gameManager.waveButton.disabled = !this.isThePlayerInTheSafeZone();
         }
 
-        if (uiManager.currentPage instanceof ItemOnFloor) {
+        if (uiManager.currentPage instanceof ItemOnFloor || uiManager.currentPage instanceof Merchant) {
             if (!this.isCollidingWith(uiManager.currentPage)) {
                 uiManager.currentPage = undefined;
                 uiManager.initializePage();
@@ -64,8 +64,8 @@ class PlayerObject extends ImageObject {
 
     move() {
         this.showRotatedMageAccordingToVelocity();
-        this.position.x += (this.velocity.xRight - this.velocity.xLeft) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal();
-        this.position.y += (this.velocity.yDown - this.velocity.yUp) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal();
+        this.position.x += (this.velocity.xRight - this.velocity.xLeft) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal() * gameManager.deltaTime;
+        this.position.y += (this.velocity.yDown - this.velocity.yUp) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal() * gameManager.deltaTime;
     }
 
     isThePlayerInTheSafeZone() {

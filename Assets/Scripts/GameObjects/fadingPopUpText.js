@@ -1,4 +1,4 @@
-class FadingPopUp extends GameObject{
+class FadingPopUpText extends GameObject{
     text;
     currentTransparancy;
     timeStampCreated;

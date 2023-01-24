@@ -3,7 +3,7 @@ class Enemy extends ImageObject {
     currentHealthPoints = 100;
     maxHealthPoints = 100;
 
-    speed = 0.5;
+    movementSpeed = 0.5;
 
     origin = {
         x: 0,
@@ -14,6 +14,7 @@ class Enemy extends ImageObject {
     attackDamage = 100;
     touchingBarrier = false;
     timeStampLastTimeDealtDamage = 0;
+    expPoints = 20;
 
     constructor(name, src, x, y, width, height) {
         super(name, src, x, y, width, height);
@@ -53,13 +54,13 @@ class Enemy extends ImageObject {
         let directionXNormalised = (directionX) / directionVectorLength;
         let directionYNormalised = (directionY) / directionVectorLength;
 
-        this.position.x += directionXNormalised * this.speed;
-        this.position.y += directionYNormalised * this.speed;
+        this.position.x += directionXNormalised * this.movementSpeed * gameManager.deltaTime;
+        this.position.y += directionYNormalised * this.movementSpeed * gameManager.deltaTime;
     }
 
     onCollision(otherObject) {
         if (otherObject.name === "magicBarrier") {
-            this.speed = 0;
+            this.movementSpeed = 0;
             this.touchingBarrier = true;
         }
     }
@@ -68,16 +69,19 @@ class Enemy extends ImageObject {
         this.currentHealthPoints -= damage;
         this.hpBar.dimensions.width = this.hpBar.border.dimensions.width * (this.currentHealthPoints / this.maxHealthPoints);
 
-        new FadingPopUp("-" + damage, this.position.x + this.dimensions.width, this.position.y - 20, 35);
+        new FadingPopUpText("-" + Math.floor(damage), this.position.x + this.dimensions.width, this.position.y - 20, 35);
 
         if (this.currentHealthPoints <= 0) {
-            this.die();
+            this.die(true);
         }
     }
 
-    die() {
+    die(isPlayerSourceOfDamage = false) {
         waveManager.addToCounterOfDefeatedEnemies();
-        this.dropLoot();
+        if (isPlayerSourceOfDamage) {
+            this.dropLoot();
+            playerManager.gainExperience(this.expPoints);
+        }
         this.destroy();
         this.hpBar.destroy();
         this.hpBar.border.destroy();
@@ -88,11 +92,9 @@ class Enemy extends ImageObject {
         if (numb <= waveManager.chanceThatEnemyDropsGold) {
             gameManager.dropGoldCoin(this.position.x, this.position.y);
         }
-        console.log("Lucky number for Gold drop was: " + numb);
         numb = Math.random();
         if (numb <= waveManager.chanceThatEnemyDropsItem) {
-            gameManager.dropItem(waveManager.getRandomItemNameWithCategoryFromItems(1), this.position.x, this.position.y);
+            gameManager.dropItem(waveManager.getRandomItemNameWithTierFromItems(1), this.position.x+20, this.position.y);
         }
-        console.log("Lucky number for Item drop was: " + numb);
     }
 }

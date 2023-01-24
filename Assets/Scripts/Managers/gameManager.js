@@ -12,6 +12,9 @@ class GameManager {
     titleObject;
     castle;
 
+    deltaTime = 0;
+    lastFrameTimeStamp = Date.now();
+
     constructor() {
         console.log("Game-Manager created!");
     }
@@ -19,6 +22,7 @@ class GameManager {
     gameLoop(timeStamp) {
         gameCanvas.drawLayer.clearRect(0, 0, gameCanvas.canvasHTMLElement.width, gameCanvas.canvasHTMLElement.height);
 
+        gameManager.calculateDeltaTime();
         gameManager.trackFps(timeStamp);
         for (let gameLoopState = 0; gameLoopState < 3; gameLoopState++) {
             gameManager.gameObjects.forEach((gameObject) => {
@@ -114,5 +118,11 @@ class GameManager {
 
     dropItem(name, x, y) {
         new ItemOnFloor(name, "DroppedItem.png", x, y, 55, 55,  false);
+    }
+
+    calculateDeltaTime() {
+        let currentTimeStamp = Date.now();
+        this.deltaTime = (currentTimeStamp - this.lastFrameTimeStamp)/10;
+        this.lastFrameTimeStamp = currentTimeStamp;
     }
 }

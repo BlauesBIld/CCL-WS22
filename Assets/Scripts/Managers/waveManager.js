@@ -14,6 +14,11 @@ class WaveManager {
     chanceThatEnemyDropsGold = 0.5;
     chanceThatEnemyDropsItem = 0.2;
 
+    waveMultiplierIfOverLimit = 1;
+
+    chanceThatTheMerchantAppears = 1;
+    merchant;
+
     constructor() {
         console.log("Enemy-Manager created!");
     }
@@ -32,34 +37,53 @@ class WaveManager {
         this.spawnMonsters();
 
         gameManager.titleObject.displayNewTitle("Wave " + this.currentWaveNo);
+        if(this.merchant !== undefined){
+            this.merchant.destroy();
+            this.merchant = undefined;
+        }
     }
 
     spawnMonsters() {
         let amountOfEnemiesSpawned = 0;
-        waveConfig[this.currentWaveNo].enemies.forEach(enemy => {
-            for (let i = 0; i < enemy.amount; i++) {
-                amountOfEnemiesSpawned++;
-                setTimeout(function () {
-                    if (waveManager.waveActive) {
-                        new Enemy("Slime", "./Enemies/" + enemy.name + ".png", getRandomPositionOnXAxis(), 20, waveManager.enemyDefaultSize * enemy.size, waveManager.enemyDefaultSize * enemy.size);
-                    }
-                }, this.timeBetweenMonsterSpawn * (amountOfEnemiesSpawned) + this.initialDelayToStartWave);
-            }
-        })
+        for (let i = 0; i < this.waveMultiplierIfOverLimit; i++) {
+            waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => {
+                for (let i = 0; i < enemy.amount; i++) {
+                    amountOfEnemiesSpawned++;
+                    setTimeout(function () {
+                        if (waveManager.waveActive) {
+                            waveManager.spawnMonsterFromType(enemy);
+                        }
+                    }, this.timeBetweenMonsterSpawn * (amountOfEnemiesSpawned) + this.initialDelayToStartWave);
+                }
+            });
+        }
+    }
+
+    spawnMonsterFromType(enemy) {
+        switch (enemy.type) {
+            case "Slime":
+                new Slime(enemy.name, enemy.size);
+                break;
+            case "SlimeKing":
+                new SlimeKing(enemy.name, enemy.size);
+        }
     }
 
     checkIfWaveDone() {
         if (this.defeatedEnemiesCounter >= this.getTotalAmountOfEnemiesFromCurrentWave()) {
             this.currentWaveNo++;
+            if (this.currentWaveNo > waveConfig.length) {
+                this.currentWaveNo = 1;
+                this.waveMultiplierIfOverLimit++;
+            }
+            gameManager.titleObject.displayNewTitle("Wave cleared!");
             this.resetWave();
-            gameManager.titleObject.displayNewTitle("Wave cleared!")
         } else if (gameManager.magicBarrier.currentHealthPoints <= 0) {
             this.enemies.forEach(value => value.die())
             gameManager.magicBarrier.currentHealthPoints = 100;
+            gameManager.titleObject.displayNewTitle("Wave failed!");
             this.resetWave();
-            gameManager.titleObject.displayNewTitle("Wave failed!")
         }
-
     }
 
     resetWave() {
@@ -68,6 +92,10 @@ class WaveManager {
         this.defeatedEnemiesCounter = 0;
         gameManager.waveButton.disabled = false;
         gameManager.waveButton.innerHTML = "Start wave " + this.currentWaveNo;
+
+        if(Math.random() <= this.chanceThatTheMerchantAppears){
+            this.merchant = new Merchant();
+        }
     }
 
     addToCounterOfDefeatedEnemies() {
@@ -79,17 +107,17 @@ class WaveManager {
         gameManager.gameCanvas.drawLayer.font = 'bold 25px \'MedievalSharp\'';
         gameManager.gameCanvas.drawLayer.fillStyle = 'black';
         gameManager.gameCanvas.drawLayer.textAlign = 'right';
-        gameManager.gameCanvas.drawLayer.fillText("Enemies: " + this.defeatedEnemiesCounter + "/" + this.getTotalAmountOfEnemiesFromCurrentWave(), gameCanvas.canvasBoundaries.right - 10, 30);
+        gameManager.gameCanvas.drawLayer.fillText("Enemies: " + this.defeatedEnemiesCounter + "/" + this.getTotalAmountOfEnemiesFromCurrentWave() * this.waveMultiplierIfOverLimit, gameCanvas.canvasBoundaries.right - 10, 30);
         gameManager.gameCanvas.drawLayer.restore();
     }
 
     getTotalAmountOfEnemiesFromCurrentWave() {
         let sumOfEnemies = 0;
-        waveConfig[this.currentWaveNo].enemies.forEach(enemy => sumOfEnemies += enemy.amount);
+        waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => sumOfEnemies += enemy.amount);
         return sumOfEnemies;
     }
 
-    getRandomItemNameWithCategoryFromItems(tier) {
+    getRandomItemNameWithTierFromItems(tier) {
         let allItems = [];
         for (let itemCategory in items) {
             allItems[itemCategory] = [];
@@ -100,8 +128,8 @@ class WaveManager {
             }
         }
 
-        let randomCategoryNumb = Math.floor(Math.random()*4);
-        let randomItemNumb = Math.floor(Math.random()*allItems[getItemCategoryFromIndex(randomCategoryNumb)].length);
+        let randomCategoryNumb = Math.floor(Math.random() * 4);
+        let randomItemNumb = Math.floor(Math.random() * allItems[getItemCategoryFromIndex(randomCategoryNumb)].length);
         return getItemCategoryFromIndex(randomCategoryNumb) + ":" + allItems[getItemCategoryFromIndex(randomCategoryNumb)][randomItemNumb];
     }
 }

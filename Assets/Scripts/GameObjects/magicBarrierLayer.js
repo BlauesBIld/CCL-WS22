@@ -26,7 +26,6 @@ class MagicBarrierLayer extends ImageObject {
     }
 
     draw() {
-        this.image.src = this.imageFilePath
         gameManager.gameCanvas.drawLayer.save();
         gameManager.gameCanvas.drawLayer.translate(this.position.x + (this.dimensions.width / 2), this.position.y + (this.dimensions.height / 2));
         gameManager.gameCanvas.drawLayer.rotate(this.angle * Math.PI / 180);

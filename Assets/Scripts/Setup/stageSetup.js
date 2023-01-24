@@ -22,7 +22,7 @@ gameManager.setCastle(castleObj);
 
 let playerHeight = 150,
     playerWidth = 100,
-    player = new PlayerObject(gameCanvas.canvasBoundaries.right / 2 - playerWidth / 2, gameCanvas.canvasBoundaries.bottom - playerHeight - 20, playerWidth, playerHeight);
+    player = new Player(gameCanvas.canvasBoundaries.right / 2 - playerWidth / 2, gameCanvas.canvasBoundaries.bottom - playerHeight - 20, playerWidth, playerHeight);
 
 let gameCanvasLeft = gameCanvas.canvasHTMLElement.offsetLeft + gameCanvas.canvasHTMLElement.clientLeft,
     gameCanvasTop = gameCanvas.canvasHTMLElement.offsetTop + gameCanvas.canvasHTMLElement.clientTop;
@@ -43,12 +43,13 @@ gameCanvas.canvasHTMLElement.addEventListener("mouseup", function (event) {
     player.isShooting = false;
 });
 
-let titleObject = new TitleObject();
+let titleObject = new FadingTitleText();
 gameManager.setTitleObject(titleObject);
 
-playerManager.equipItem("weapon", "WoodenRod");
-gameManager.dropItem(waveManager.getRandomItemNameWithCategoryFromItems(1), 650, 350);
+playerManager.equipItem("weapon", "Wooden Rod");
+gameManager.dropItem(waveManager.getRandomItemNameWithTierFromItems(1), 650, 350);
 setUpBorderWalls();
+waveManager.merchant = new Merchant();
 
 function setUpBorderWalls() {
     new GameObject("wall", 0, 0, gameCanvas.canvasBoundaries.right, 0);
@@ -72,8 +73,8 @@ function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-function getRandomPositionOnXAxis() {
-    return getRandomInt(gameManager.gameCanvas.canvasBoundaries.right);
+function getRandomPositionOnXAxis(considerWidthOfObject = 0) {
+    return getRandomInt(gameManager.gameCanvas.canvasBoundaries.right - considerWidthOfObject);
 }
 
 function capitalizeFirstLetterOfWord(text) {

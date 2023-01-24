@@ -20,19 +20,19 @@ class UIManager {
     }
 
     initializePage() {
-        console.log("CLEARING REACTANGLE")
+        playerManager.recalculateStats();
         this.uiCanvas.drawLayer.clearRect(0, 0, this.uiCanvas.canvasBoundaries.right, this.uiCanvas.canvasBoundaries.bottom);
         this.setOnClickOfInteractButton("clear");
         if (this.currentPage === undefined) {
-            console.log("drawingDefault")
             this.initializeDefaultPage();
         } else if (this.currentPage instanceof ItemOnFloor) {
-            console.log("drawingItem")
             this.setOnClickOfInteractButton("pickUp");
             this.setInteractButtonTextAndDisabledProperties("Equip!", false);
             this.drawHeader();
             this.drawItemOnTheFloor();
             this.drawItemCurrentlyEquipped();
+        } else if (this.currentPage instanceof Merchant){
+            console.log("seas")
         }
     }
 
@@ -169,6 +169,11 @@ class UIManager {
                     playerManager.pickUpItem(item);
                 };
                 break;
+            case "pat":
+                this.interactButton.onclick = function () {
+                    waveManager.merchant.merchantsRhino.startPatting();
+                };
+                break;
         }
 
     }
@@ -183,15 +188,15 @@ class UIManager {
         paddingBetweenStats += 60;
         this.drawText("Intelligence", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
         paddingBetweenStats += 40;
-        this.drawText("- " + playerManager.intelligence.value + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
+        this.drawText("- " + Math.floor(playerManager.getIntelligence()) + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
         paddingBetweenStats += 60;
         this.drawText("Spell Cast Rate", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
         paddingBetweenStats += 40;
-        this.drawText("- " + playerManager.spellCastRate.value + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
+        this.drawText("- " + Math.floor(playerManager.getSpellCastRateToDisplay()) + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
         paddingBetweenStats += 60;
         this.drawText("Magic Crit", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
         paddingBetweenStats += 40;
-        this.drawText("- " + playerManager.magicCrit.value + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
+        this.drawText("- " + Math.floor(playerManager.getMagicCrit()) + " -", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop + paddingBetweenStats, statsSize, "center");
     }
 
     drawItemCurrentlyEquipped() {

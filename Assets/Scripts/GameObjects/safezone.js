@@ -19,7 +19,6 @@ class Safezone extends ImageObject{
     }
 
     draw() {
-        this.image.src = this.imageFilePath
         gameManager.gameCanvas.drawLayer.save();
         gameManager.gameCanvas.drawLayer.globalAlpha = this.opacityOfZone;
         gameManager.gameCanvas.drawLayer.beginPath();
