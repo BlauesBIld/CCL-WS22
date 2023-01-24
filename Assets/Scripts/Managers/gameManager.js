@@ -36,9 +36,9 @@ class GameManager {
                 }
             });
 
-            if (enemyManager.waveActive) {
-                enemyManager.checkIfWaveDone();
-                enemyManager.trackDefeatedEnemies();
+            if (waveManager.waveActive) {
+                waveManager.checkIfWaveDone();
+                waveManager.trackDefeatedEnemies();
             }
 
             magicBarrier.trackHealth();
@@ -92,7 +92,7 @@ class GameManager {
     setWaveButton(waveButton) {
         this.waveButton = waveButton;
         this.waveButton.onclick = function () {
-            enemyManager.startWave();
+            waveManager.startWave();
         };
     }
 
@@ -109,10 +109,10 @@ class GameManager {
     }
 
     dropGoldCoin(x, y) {
-        new ItemOnFloor("goldcoin", "GoldCoin.png", x, y, 55, 42, false, true);
+        new ItemOnFloor("goldcoin", "GoldCoin.png", x, y, 55, 42, true);
     }
 
     dropItem(name, x, y) {
-        new ItemOnFloor(name, "DroppedItem.png", x, y, 55, 55, false, false);
+        new ItemOnFloor(name, "DroppedItem.png", x, y, 55, 55,  false);
     }
 }

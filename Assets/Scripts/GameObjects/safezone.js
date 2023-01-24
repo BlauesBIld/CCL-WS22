@@ -3,8 +3,8 @@ class Safezone extends ImageObject{
     maxOpacityOfZone = 0.7;
     diffOpacityOfZone = 0.008;
 
-    constructor(name, fileName, x, y, width, height, kinematic) {
-        super(name, fileName, x, y, width, height, kinematic);
+    constructor(name, fileName, x, y, width, height) {
+        super(name, fileName, x, y, width, height);
     }
 
 

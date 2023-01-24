@@ -1,4 +1,4 @@
-class EnemyManager {
+class WaveManager {
     enemies = [];
     itemsOnTheFloor = [];
 
@@ -40,8 +40,8 @@ class EnemyManager {
             for (let i = 0; i < enemy.amount; i++) {
                 amountOfEnemiesSpawned++;
                 setTimeout(function () {
-                    if (enemyManager.waveActive) {
-                        new Enemy("Slime", "./Enemies/" + enemy.name + ".png", getRandomPositionOnXAxis(), 20, enemyManager.enemyDefaultSize * enemy.size, enemyManager.enemyDefaultSize * enemy.size);
+                    if (waveManager.waveActive) {
+                        new Enemy("Slime", "./Enemies/" + enemy.name + ".png", getRandomPositionOnXAxis(), 20, waveManager.enemyDefaultSize * enemy.size, waveManager.enemyDefaultSize * enemy.size);
                     }
                 }, this.timeBetweenMonsterSpawn * (amountOfEnemiesSpawned) + this.initialDelayToStartWave);
             }

@@ -5,10 +5,11 @@ class ItemOnFloor extends ImageObject {
     maxOffset = 5;
     originalPosY;
 
-    constructor(name, fileName, x, y, width, height, kinematic, autoPickUp = false) {
-        super(name, fileName, x, y, width, height, kinematic);
+    constructor(name, fileName, x, y, width, height, autoPickUp = false) {
+        super(name, fileName, x, y, width, height);
         this.originalPosY = y;
         this.autoPickUp = autoPickUp;
+        waveManager.itemsOnTheFloor.push(this);
     }
 
     update() {

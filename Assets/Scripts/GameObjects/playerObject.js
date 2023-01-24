@@ -10,11 +10,20 @@ class PlayerObject extends ImageObject {
         xRight: 0,
         yUp: 0,
         yDown: 0
-    }
+    };
+
+    columnsOnSpriteSheet = {
+        BACK: 0,
+        FRONT: 1,
+        RIGHT: 2,
+        LEFT: 3
+    };
+
+
     playerSafeZone = undefined;
 
-    constructor(name, src, x, y, width, height) {
-        super(name, src, x, y, width, height);
+    constructor(x, y, width, height) {
+        super("player", "Mage.png", x, y, width, height, 720, 1024, 50, true);
         console.log("PlayerFigure has been created");
         this.playerSafeZone = new GameObject("safezone", gameManager.castle.safeZone.position.x, gameManager.castle.safeZone.position.y + this.dimensions.height, gameManager.castle.dimensions.width, gameManager.castle.dimensions.height - this.dimensions.height);
 
@@ -25,14 +34,15 @@ class PlayerObject extends ImageObject {
         this.isThePlayerInTheSafeZone();
         if (this.isShooting) {
             this.shoot();
+            this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.BACK;
         }
 
-        if (enemyManager.waveActive === false) {
+        if (waveManager.waveActive === false) {
             gameManager.waveButton.disabled = !this.isThePlayerInTheSafeZone();
         }
 
-        if(uiManager.currentPage instanceof ItemOnFloor){
-            if(!this.isCollidingWith(uiManager.currentPage)){
+        if (uiManager.currentPage instanceof ItemOnFloor) {
+            if (!this.isCollidingWith(uiManager.currentPage)) {
                 uiManager.currentPage = undefined;
                 uiManager.initializePage();
             }
@@ -40,7 +50,7 @@ class PlayerObject extends ImageObject {
     }
 
     shoot() {
-        if (this.timeStampLastTimeAttackBallFired + playerManager.spellCastRate.value < Date.now()) {
+        if (this.timeStampLastTimeAttackBallFired + playerManager.getSpellCastRate() < Date.now()) {
             new AttackBall("attackBall", "FireBall.png", 80, this.mousePosX, this.mousePosY);
             this.timeStampLastTimeAttackBallFired = Date.now();
         }
@@ -53,6 +63,7 @@ class PlayerObject extends ImageObject {
     }
 
     move() {
+        this.showRotatedMageAccordingToVelocity();
         this.position.x += (this.velocity.xRight - this.velocity.xLeft) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal();
         this.position.y += (this.velocity.yDown - this.velocity.yUp) * playerManager.movementSpeed * this.getUnitFactorIfWalkingDiagonal();
     }
@@ -66,5 +77,17 @@ class PlayerObject extends ImageObject {
             return 0.66;
         }
         return 1;
+    }
+
+    showRotatedMageAccordingToVelocity() {
+        if (this.velocity.yDown) {
+            this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.FRONT;
+        } else if (this.velocity.yUp) {
+            this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.BACK;
+        } else if (this.velocity.xRight) {
+            this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.RIGHT;
+        } else if (this.velocity.xLeft) {
+            this.currentColumnInSpriteSheet = this.columnsOnSpriteSheet.LEFT;
+        }
     }
 }

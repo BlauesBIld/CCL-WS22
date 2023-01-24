@@ -52,7 +52,11 @@ class AttackBall extends ImageObject {
 
     onCollision(otherObject) {
         if (otherObject instanceof Enemy) {
-            otherObject.receiveDamage(playerManager.intelligence.value);
+            if(getRandomInt(100) < playerManager.getMagicCrit()){
+                otherObject.receiveDamage(playerManager.getIntelligence()*2);
+            } else {
+                otherObject.receiveDamage(playerManager.getIntelligence());
+            }
             this.destroy();
         }
     }

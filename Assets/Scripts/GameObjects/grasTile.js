@@ -1,6 +1,6 @@
 class GrasTile extends ImageObject {
     constructor(name, src, size, spawnX, spawnY) {
-        super(name, src, getRandomIntFromSpawnLocs(size, spawnX), getRandomIntFromSpawnLocs(size, spawnY, 30), size, size, true);
+        super(name, src, getRandomIntFromSpawnLocs(size, spawnX), getRandomIntFromSpawnLocs(size, spawnY, 30), size, size);
     }
 }
 

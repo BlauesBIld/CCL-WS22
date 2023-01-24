@@ -4,12 +4,12 @@ class PlayerManager {
         value: 0
     };
 
-    spellCastRate ={
+    spellCastRate = {
         base: 0,
         value: 0
     };
 
-    magicCrit={
+    magicCrit = {
         base: 0,
         value: 0
     };
@@ -49,8 +49,6 @@ class PlayerManager {
         this.calculateStat("intelligence");
         this.calculateStat("spellCastRate");
         this.calculateStat("magicCrit");
-        console.log(this.intelligence);
-        console.log(this.equipped);
     }
 
     calculateStat(statName) {
@@ -58,13 +56,13 @@ class PlayerManager {
         if (this.equipped.weapon !== undefined) {
             this[statName].value += this.equipped.weapon[statName];
         }
-        if(this.equipped.robe !== undefined){
+        if (this.equipped.robe !== undefined) {
             this[statName].value += this.equipped.robe[statName];
         }
-        if(this.equipped.hat !== undefined){
+        if (this.equipped.hat !== undefined) {
             this[statName].value += this.equipped.hat[statName];
         }
-        if(this.equipped.accessory !== undefined){
+        if (this.equipped.accessory !== undefined) {
             this[statName].value += this.equipped.accessory[statName];
         }
     }
@@ -72,17 +70,18 @@ class PlayerManager {
     equipItem(itemType, itemName) {
         this.equipped[itemType] = items[itemType][itemName];
         this.recalculateStats();
+        uiManager.initializePage();
     }
 
-    getIntelligence(){
+    getIntelligence() {
         return this.intelligence.value;
     }
 
-    getSpellCastRate(){
-        return this.spellCastRate.value;
+    getSpellCastRate() {
+        return 600 - this.spellCastRate.value;
     }
 
-    getMagicCrit(){
+    getMagicCrit() {
         return this.magicCrit.value;
     }
 

@@ -21,7 +21,7 @@ class Enemy extends ImageObject {
         this.hpBar.enemy = this;
         this.origin.x = x;
         this.origin.y = y;
-        enemyManager.addEnemy(this);
+        waveManager.addEnemy(this);
     }
 
     update() {
@@ -76,7 +76,7 @@ class Enemy extends ImageObject {
     }
 
     die() {
-        enemyManager.addToCounterOfDefeatedEnemies();
+        waveManager.addToCounterOfDefeatedEnemies();
         this.dropLoot();
         this.destroy();
         this.hpBar.destroy();
@@ -85,13 +85,13 @@ class Enemy extends ImageObject {
 
     dropLoot() {
         let numb = Math.random();
-        if (numb <= enemyManager.chanceThatEnemyDropsGold) {
+        if (numb <= waveManager.chanceThatEnemyDropsGold) {
             gameManager.dropGoldCoin(this.position.x, this.position.y);
         }
         console.log("Lucky number for Gold drop was: " + numb);
         numb = Math.random();
-        if (numb <= enemyManager.chanceThatEnemyDropsItem) {
-            gameManager.dropItem(enemyManager.getRandomItemNameWithCategoryFromItems(1), this.position.x, this.position.y);
+        if (numb <= waveManager.chanceThatEnemyDropsItem) {
+            gameManager.dropItem(waveManager.getRandomItemNameWithCategoryFromItems(1), this.position.x, this.position.y);
         }
         console.log("Lucky number for Item drop was: " + numb);
     }

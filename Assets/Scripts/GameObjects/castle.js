@@ -8,7 +8,7 @@ class Castle extends ImageObject {
     safeZone = undefined;
 
     constructor(name, fileName, x, y, width, height) {
-        super(name, fileName, x, y, width, height, true);
+        super(name, fileName, x, y, width, height);
         this.safeZone = new Safezone("safeZone", "Safezone.png", this.turretWidth, gameManager.gameCanvas.canvasBoundaries.bottom - this.safeZoneHeight, gameManager.gameCanvas.canvasBoundaries.right-this.turretWidth*2, this.safeZoneHeight);
     }
 }
