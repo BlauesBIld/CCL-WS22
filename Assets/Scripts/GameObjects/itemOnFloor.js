@@ -42,8 +42,6 @@ class ItemOnFloor extends ImageObject {
                 playerManager.pickUpItem(this);
                 this.destroy();
             } else {
-                console.log("seas");
-                console.log(uiManager.currentPage);
                 if (!uiManager.currentPage instanceof ItemOnFloor || uiManager.currentPage === undefined) {
                     uiManager.currentPage = this;
                     uiManager.initializePage();

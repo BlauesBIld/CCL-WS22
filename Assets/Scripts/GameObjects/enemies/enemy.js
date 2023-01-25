@@ -69,7 +69,7 @@ class Enemy extends ImageObject {
         this.currentHealthPoints -= damage;
         this.hpBar.dimensions.width = this.hpBar.border.dimensions.width * (this.currentHealthPoints / this.maxHealthPoints);
 
-        new FadingPopUpText("-" + Math.floor(damage), this.position.x + this.dimensions.width, this.position.y - 20, 35);
+        new FadingTextPopUp("-" + Math.floor(damage), this.position.x + this.dimensions.width, this.position.y - 20, 35);
 
         if (this.currentHealthPoints <= 0) {
             this.die(true);

@@ -41,8 +41,15 @@ class Player extends ImageObject {
             gameManager.waveButton.disabled = !this.isThePlayerInTheSafeZone();
         }
 
-        if (uiManager.currentPage instanceof ItemOnFloor || uiManager.currentPage instanceof Merchant) {
+        if (uiManager.currentPage instanceof ItemOnFloor) {
             if (!this.isCollidingWith(uiManager.currentPage)) {
+                uiManager.currentPage = undefined;
+                uiManager.initializePage();
+            }
+        }
+
+        if(uiManager.currentPage instanceof Merchant){
+            if (!this.isCollidingWith(uiManager.currentPage.shopArea)) {
                 uiManager.currentPage = undefined;
                 uiManager.initializePage();
             }

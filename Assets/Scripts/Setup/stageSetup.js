@@ -33,7 +33,18 @@ gameCanvas.canvasHTMLElement.addEventListener("mousemove", function (event) {
 
     player.mousePosX = x;
     player.mousePosY = y;
-})
+});
+
+let uiCanvasLeft = uiCanvas.canvasHTMLElement.offsetLeft + uiCanvas.canvasHTMLElement.clientLeft,
+    uiCanvasTop = uiCanvas.canvasHTMLElement.offsetTop + uiCanvas.canvasHTMLElement.clientTop;
+
+uiCanvas.canvasHTMLElement.addEventListener("mousemove", function (event) {
+    let x = event.pageX - uiCanvasLeft,
+        y = event.pageY - uiCanvasTop;
+
+    uiManager.mousePosX = x;
+    uiManager.mousePosY = y;
+});
 
 gameCanvas.canvasHTMLElement.addEventListener("mousedown", function (event) {
     player.isShooting = true;

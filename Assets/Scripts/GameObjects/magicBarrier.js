@@ -29,7 +29,7 @@ class MagicBarrier {
 
     receiveDamage(amountOfDamage) {
         this.currentHealthPoints -= amountOfDamage;
-        new FadingPopUpText("-" + Math.floor(amountOfDamage), gameManager.gameCanvas.canvasBoundaries.right/2, this.barrierWall.position.y + this.barrierWall.dimensions.height, 42, 1)
+        new FadingTextPopUp("-" + Math.floor(amountOfDamage), gameManager.gameCanvas.canvasBoundaries.right/2, this.barrierWall.position.y + this.barrierWall.dimensions.height, 42, 1)
     }
 
     deactivateBarrier(){

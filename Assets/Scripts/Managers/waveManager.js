@@ -16,7 +16,7 @@ class WaveManager {
 
     waveMultiplierIfOverLimit = 1;
 
-    chanceThatTheMerchantAppears = 1;
+    chanceThatTheMerchantAppears = 0.2;
     merchant;
 
     constructor() {
@@ -93,7 +93,9 @@ class WaveManager {
         gameManager.waveButton.disabled = false;
         gameManager.waveButton.innerHTML = "Start wave " + this.currentWaveNo;
 
-        if(Math.random() <= this.chanceThatTheMerchantAppears){
+        let randomNumber = Math.random();
+        console.log("Lucky number was " + randomNumber);
+        if(randomNumber <= this.chanceThatTheMerchantAppears){
             this.merchant = new Merchant();
         }
     }

@@ -6,6 +6,12 @@ class UIManager {
 
     interactButton;
 
+    mousePosX;
+    mousePosY;
+
+    shopItemBoundaries = []
+    selectShopItem = -1;
+
     constructor() {
         console.log("UI-Manager created!");
     }
@@ -22,17 +28,22 @@ class UIManager {
     initializePage() {
         playerManager.recalculateStats();
         this.uiCanvas.drawLayer.clearRect(0, 0, this.uiCanvas.canvasBoundaries.right, this.uiCanvas.canvasBoundaries.bottom);
+        this.clearShopVariables();
         this.setOnClickOfInteractButton("clear");
         if (this.currentPage === undefined) {
             this.initializeDefaultPage();
+        } else if (this.currentPage instanceof Merchant) {
+            this.setOnClickOfInteractButton("buy");
+            this.setInteractButtonTextAndDisabledProperties("Buy!", true);
+            this.drawHeader();
+            this.drawItemsFromMerchant();
+            this.handleBuyingProcess();
         } else if (this.currentPage instanceof ItemOnFloor) {
             this.setOnClickOfInteractButton("pickUp");
             this.setInteractButtonTextAndDisabledProperties("Equip!", false);
             this.drawHeader();
             this.drawItemOnTheFloor();
             this.drawItemCurrentlyEquipped();
-        } else if (this.currentPage instanceof Merchant){
-            console.log("seas")
         }
     }
 
@@ -80,14 +91,7 @@ class UIManager {
             uiManager.uiCanvas.drawLayer.closePath();
             uiManager.uiCanvas.drawLayer.restore();
             if (frame) {
-                uiManager.uiCanvas.drawLayer.save();
-                uiManager.uiCanvas.drawLayer.beginPath();
-                uiManager.uiCanvas.drawLayer.strokeStyle = 'black';
-                uiManager.uiCanvas.drawLayer.lineWidth = frameLineWidth;
-                uiManager.uiCanvas.drawLayer.roundRect(x - 5, y - 5, width + 10, height + 10, 20)
-                uiManager.uiCanvas.drawLayer.stroke();
-                uiManager.uiCanvas.drawLayer.closePath();
-                uiManager.uiCanvas.drawLayer.restore();
+                uiManager.drawFrame("black", x, y, width, height, frameLineWidth);
             }
         }
     }
@@ -116,10 +120,7 @@ class UIManager {
     }
 
     drawGearFrames() {
-        let pathToImg = "",
-            iconSize = 100,
-            offset = 30,
-            distLeft = 45;
+        let pathToImg = "", iconSize = 100, offset = 30, distLeft = 45;
 
         for (let i = 0; i < 4; i++) {
             if (playerManager.equipped[getItemCategoryFromIndex(i)] !== undefined) {
@@ -132,10 +133,7 @@ class UIManager {
     }
 
     drawGearIcons() {
-        let iconSize = 80,
-            offset = 50,
-            distLeft = 55,
-            opacity = 0.4;
+        let iconSize = 80, offset = 50, distLeft = 55, opacity = 0.4;
         for (let i = 0; i < 4; i++) {
             this.drawGearIconBackground(getItemCategoryFromIndex(i), "UI/" + capitalizeFirstLetterOfWord(getItemCategoryFromIndex(i)) + "Icon.png", distLeft, 90 + iconSize * (i) + (offset * i), iconSize, iconSize, opacity);
         }
@@ -174,15 +172,25 @@ class UIManager {
                     waveManager.merchant.merchantsRhino.startPatting();
                 };
                 break;
+            case "buy":
+                this.interactButton.onclick = function () {
+                    let shopElement = waveManager.merchant.randomItemsInShop[uiManager.selectShopItem];
+                    console.log(uiManager.selectShopItem)
+                    if (playerManager.goldCoinsAmount >= shopElement.price) {
+                        waveManager.merchant.randomItemsInShop.splice(uiManager.selectShopItem, 1);
+                        playerManager.equipItem(shopElement.item.split(':')[0], shopElement.item.split(':')[1]);
+                        playerManager.goldCoinsAmount -= shopElement.price;
+                        console.log(uiManager.selectShopItem);
+                        uiManager.initializePage();
+                    }
+                }
+                break;
         }
 
     }
 
     drawStatsOnDefaultPage() {
-        let titleSize = 45,
-            statsSize = 32,
-            paddingBetweenStats = 40,
-            paddingToTop = 160;
+        let titleSize = 45, statsSize = 32, paddingBetweenStats = 40, paddingToTop = 160;
 
         this.drawText("Player Stats", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop, titleSize, "center");
         paddingBetweenStats += 60;
@@ -200,10 +208,7 @@ class UIManager {
     }
 
     drawItemCurrentlyEquipped() {
-        let distLeft = 50,
-            distBottom = 80,
-            iconSize = 60,
-            statsText = "";
+        let distLeft = 50, distBottom = 80, iconSize = 60, statsText = "";
 
         this.drawText("Currently Equipped " + capitalizeFirstLetterOfWord(this.currentPage.name.split(':')[0]), this.uiCanvas.canvasBoundaries.right / 2, this.uiCanvas.canvasBoundaries.bottom - 110, 25, "center");
         if (playerManager.equipped[this.currentPage.name.split(':')[0]] !== undefined) {
@@ -211,10 +216,77 @@ class UIManager {
             statsText = "Int.: " + itemEquipped.intelligence + " / S.C.R.: " + itemEquipped.spellCastRate + " / M-Crit.: " + itemEquipped.magicCrit;
 
             this.drawImageWithFrame("Items/" + playerManager.equipped[this.currentPage.name.split(':')[0]].imageFileName, distLeft, this.uiCanvas.canvasBoundaries.bottom - distBottom, iconSize, iconSize, 6);
-            } else {
+        } else {
             statsText = "Int.: - / S.C.R.: - / Magic Crit: -";
             this.drawImageWithFrame("UI/" + capitalizeFirstLetterOfWord(this.currentPage.name.split(':')[0]) + "Icon.png", distLeft, this.uiCanvas.canvasBoundaries.bottom - distBottom, iconSize, iconSize, 6, 0.4);
         }
-        this.drawText(statsText, this.uiCanvas.canvasBoundaries.right/2 + distLeft, this.uiCanvas.canvasBoundaries.bottom - (distBottom/2), 20, "center");
+        this.drawText(statsText, this.uiCanvas.canvasBoundaries.right / 2 + distLeft, this.uiCanvas.canvasBoundaries.bottom - (distBottom / 2), 20, "center");
+    }
+
+    drawItemsFromMerchant() {
+        let distLeft = 30, distTop = 150, iconSize = 100, iterationIndex = 0;
+        uiManager.drawText("SHOP", uiManager.uiCanvas.canvasBoundaries.right / 2, 100, 36, "center");
+        waveManager.merchant.randomItemsInShop.forEach(shopElement => {
+            let item = items[shopElement.item.split(':')[0]][shopElement.item.split(':')[1]];
+            this.drawImageWithFrame("Items/" + item.imageFileName, distLeft, distTop + (iterationIndex * iconSize) + 20 * iterationIndex, iconSize, iconSize, 4, 1);
+
+            this.shopItemBoundaries.push({
+                left: distLeft,
+                top: distTop + (iterationIndex * iconSize) + 20 * iterationIndex,
+                right: distLeft + iconSize,
+                bottom: distTop + (iterationIndex * iconSize) + 20 * iterationIndex + iconSize
+            });
+
+            let statsText = "Int.: " + item.intelligence + " / S.C.R.: " + item.spellCastRate + " / M-Crit.: " + item.magicCrit;
+            this.drawText(statsText, distLeft + iconSize + 20, distTop + (iterationIndex * iconSize) + 20 * iterationIndex + iconSize / 2, 23, "left");
+            this.drawText("Price: " + shopElement.price + " Gold", distLeft + iconSize + 20, 25 + distTop + (iterationIndex * iconSize) + 20 * iterationIndex + iconSize / 2, 23, "left");
+            iterationIndex++;
+        });
+
+    }
+
+    handleBuyingProcess() {
+        uiCanvas.canvasHTMLElement.addEventListener("mousedown", function (event) {
+            for (let i = 0; i < uiManager.shopItemBoundaries.length; i++) {
+                if (event.offsetX >= uiManager.shopItemBoundaries[i].left && event.offsetX <= uiManager.shopItemBoundaries[i].right) {
+                    if (event.offsetY >= uiManager.shopItemBoundaries[i].top && event.offsetY <= uiManager.shopItemBoundaries[i].bottom) {
+                        uiManager.selectShopItem = i;
+                        uiManager.redrawFrameAroundItems();
+                        if (playerManager.goldCoinsAmount >= waveManager.merchant.randomItemsInShop[i].price) {
+                            uiManager.setInteractButtonTextAndDisabledProperties("Buy!", false);
+                        } else {
+                            uiManager.setInteractButtonTextAndDisabledProperties("Buy!", true);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    redrawFrameAroundItems() {
+        let distLeft = 30, distTop = 150, iconSize = 100;
+        for (let i = 0; i < waveManager.merchant.randomItemsInShop.length; i++) {
+            if (i === this.selectShopItem) {
+                this.drawFrame("white", distLeft, distTop + (i * iconSize) + 20 * i, iconSize, iconSize, 4);
+            } else {
+                this.drawFrame("black", distLeft, distTop + (i * iconSize) + 20 * i, iconSize, iconSize, 4);
+            }
+        }
+    }
+
+    drawFrame(color, distLeft, distTop, width, height, lineWidth) {
+        uiManager.uiCanvas.drawLayer.save();
+        uiManager.uiCanvas.drawLayer.beginPath();
+        uiManager.uiCanvas.drawLayer.strokeStyle = color;
+        uiManager.uiCanvas.drawLayer.lineWidth = lineWidth;
+        uiManager.uiCanvas.drawLayer.roundRect(distLeft - 5, distTop - 5, width + 10, height + 10, 20)
+        uiManager.uiCanvas.drawLayer.stroke();
+        uiManager.uiCanvas.drawLayer.closePath();
+        uiManager.uiCanvas.drawLayer.restore();
+    }
+
+    clearShopVariables() {
+        this.shopItemBoundaries = [];
+        this.selectShopItem = -1;
     }
 }

@@ -73,6 +73,7 @@ class PlayerManager {
 
     equipItem(itemType, itemName) {
         this.equipped[itemType] = items[itemType][itemName];
+        console.log(this.equipped);
         uiManager.initializePage();
     }
 
