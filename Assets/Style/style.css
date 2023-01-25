@@ -2,7 +2,12 @@ html{
     cursor: url('../../Assets/Sprites/mouseIconScaled.png'), auto;
 }
 
-div{
+.startScreenText{
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.interactContainer{
     position: absolute;
     margin-left: 5px;
     margin-top: 625px;
@@ -18,9 +23,9 @@ div{
     margin-bottom: 10px;
 }
 
-button {
+button, a {
     background: #D2691EFF;
-    border: 1px solid #000000;
+    border: 2px solid #000000;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
     box-sizing: border-box;
@@ -43,20 +48,26 @@ button {
     vertical-align: middle;
 }
 
-button:hover,
-button:active {
+button:hover, a:hover,
+button:active, a:active {
     cursor: url('../../Assets/Sprites/mouseIconScaled.png'), auto;
     background-color: initial;
     background-position: 0 0;
     color: #000000;
 }
 
-button:active {
+button:active, a:active {
     cursor: url('../../Assets/Sprites/mouseIconScaled.png'), auto;
     opacity: .5;
 }
 
-button:disabled {
+button:disabled, a:disabled {
     cursor: url('../../Assets/Sprites/mouseIconScaled.png'), auto;
     opacity: 30%;
+}
+
+#startGameButton{
+    font-size: 48px;
+    font-weight: 600;
+    line-height: 40px;
 }

@@ -37,7 +37,7 @@ class WaveManager {
         this.spawnMonsters();
 
         gameManager.titleObject.displayNewTitle("Wave " + this.currentWaveNo);
-        if(this.merchant !== undefined){
+        if (this.merchant !== undefined) {
             this.merchant.destroy();
             this.merchant = undefined;
         }
@@ -66,6 +66,13 @@ class WaveManager {
                 break;
             case "SlimeKing":
                 new SlimeKing(enemy.name, enemy.size);
+                break;
+            case "Crystal":
+                new Crystal(enemy.name, enemy.size);
+                break;
+            case "CrystalKing":
+                new CrystalKing(enemy.name, enemy.size);
+                break;
         }
     }
 
@@ -95,7 +102,7 @@ class WaveManager {
 
         let randomNumber = Math.random();
         console.log("Lucky number was " + randomNumber);
-        if(randomNumber <= this.chanceThatTheMerchantAppears){
+        if (randomNumber <= this.chanceThatTheMerchantAppears) {
             this.merchant = new Merchant();
         }
     }
@@ -116,7 +123,7 @@ class WaveManager {
     getTotalAmountOfEnemiesFromCurrentWave() {
         let sumOfEnemies = 0;
         waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => sumOfEnemies += enemy.amount);
-        return sumOfEnemies;
+        return sumOfEnemies * this.waveMultiplierIfOverLimit;
     }
 
     getRandomItemNameWithTierFromItems(tier) {

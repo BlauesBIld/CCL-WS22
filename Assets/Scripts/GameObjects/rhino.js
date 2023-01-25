@@ -26,7 +26,7 @@ class Rhino extends ImageObject{
         if(!this.isBeingPattedCurrently) {
             playerManager.goldCoinsAmount+=10;
             uiManager.initializePage();
-            this.spriteSheetChangeSpeed = 200;
+            this.spriteSheetChangeSpeed = 150;
             this.isBeingPattedCurrently = true;
             new FadingImagePopUp("Heart.png", this.position.x+30, gameCanvas.canvasBoundaries.bottom-180, 50);
         }

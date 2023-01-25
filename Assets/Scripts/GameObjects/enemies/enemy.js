@@ -1,4 +1,5 @@
 class Enemy extends ImageObject {
+    sizes = ['Smol', 'Middle', 'Big', 'King'];
     hpBar;
     currentHealthPoints = 100;
     maxHealthPoints = 100;
@@ -18,7 +19,7 @@ class Enemy extends ImageObject {
 
     constructor(name, src, x, y, width, height) {
         super(name, src, x, y, width, height);
-        this.hpBar = new HPBar(x, y, width, height);
+        this.hpBar = new HPBar(x, y, width, height+5);
         this.hpBar.enemy = this;
         this.origin.x = x;
         this.origin.y = y;
@@ -96,5 +97,10 @@ class Enemy extends ImageObject {
         if (numb <= waveManager.chanceThatEnemyDropsItem) {
             gameManager.dropItem(waveManager.getRandomItemNameWithTierFromItems(1), this.position.x+20, this.position.y);
         }
+    }
+
+    getSizeName(){
+        let sourcePathSplit = this.image.src.split('/');
+        return(sourcePathSplit[sourcePathSplit.length-1].split('.')[0].substring(this.name.length));
     }
 }

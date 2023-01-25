@@ -2,9 +2,9 @@ waveConfig = [
     {
         "enemies": [
             {
-                "type": "Slime",
-                "name": "SlimeSmol",
-                "amount": 5,
+                "type": "Crystal",
+                "name": "CrystalBig",
+                "amount": 1,
                 "size": 1
             }
         ]
@@ -201,6 +201,17 @@ waveConfig = [
                 "name": "SlimeKing",
                 "amount": 1,
                 "size": 3
+            }
+        ]
+    },
+
+    {
+        "enemies": [
+            {
+                "type": "Crystal",
+                "name": "CrystalSmol",
+                "amount": 5,
+                "size": 1
             }
         ]
     }
