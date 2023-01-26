@@ -32,31 +32,31 @@ class UIManager {
         this.setOnClickOfInteractButton("clear");
         if (this.currentPage === undefined) {
             this.initializeDefaultPage();
-        } else if (this.currentPage instanceof Merchant) {
-            this.setOnClickOfInteractButton("buy");
-            this.setInteractButtonTextAndDisabledProperties("Buy!", true);
-            this.drawHeader();
-            this.drawItemsFromMerchant();
-            this.handleBuyingProcess();
         } else if (this.currentPage instanceof ItemOnFloor) {
             this.setOnClickOfInteractButton("pickUp");
             this.setInteractButtonTextAndDisabledProperties("Equip!", false);
             this.drawHeader();
             this.drawItemOnTheFloor();
             this.drawItemCurrentlyEquipped();
+        } else if (this.currentPage instanceof Merchant) {
+            this.setOnClickOfInteractButton("buy");
+            this.setInteractButtonTextAndDisabledProperties("Buy!", true);
+            this.drawHeader();
+            this.drawItemsFromMerchant();
+            this.handleBuyingProcess();
         }
     }
 
     initializeDefaultPage() {
         this.drawHeader();
         this.drawEquipmentOnDefaultPage();
-        this.drawStatsOnDefaultPage();
+        this.drawPlayerStatsOnDefaultPage();
     }
 
     drawEquipmentOnDefaultPage() {
         this.setInteractButtonTextAndDisabledProperties("Interact", true);
         this.drawGearFrames();
-        this.drawGearIcons();
+        this.drawGearStatsNextToIconsInSmall();
     }
 
     drawHeader() {
@@ -120,37 +120,17 @@ class UIManager {
     }
 
     drawGearFrames() {
-        let pathToImg = "", iconSize = 100, offset = 30, distLeft = 45;
+        let pathToImg = "", iconSize = 100, offset = 30, distLeft = 45, opacity = 1;
 
         for (let i = 0; i < 4; i++) {
             if (playerManager.equipped[getItemCategoryFromIndex(i)] !== undefined) {
                 pathToImg = "Items/" + playerManager.equipped[getItemCategoryFromIndex(i)].imageFileName;
+                opacity = 1;
             } else {
-                pathToImg = "Empty.png";
+                pathToImg = "UI/" + capitalizeFirstLetterOfWord(getItemCategoryFromIndex(i)) + "Icon.png";
+                opacity = 0.4;
             }
-            this.drawImageWithFrame(pathToImg, distLeft, 80 + iconSize * (i) + (offset * i), iconSize, iconSize, 8);
-        }
-    }
-
-    drawGearIcons() {
-        let iconSize = 80, offset = 50, distLeft = 55, opacity = 0.4;
-        for (let i = 0; i < 4; i++) {
-            this.drawGearIconBackground(getItemCategoryFromIndex(i), "UI/" + capitalizeFirstLetterOfWord(getItemCategoryFromIndex(i)) + "Icon.png", distLeft, 90 + iconSize * (i) + (offset * i), iconSize, iconSize, opacity);
-        }
-    }
-
-    drawGearIconBackground(itemCategory, imageName, x, y, width, height, opacity) {
-        let image = new Image();
-        image.src = "./Sprites/" + imageName;
-        image.onload = function () {
-            if (playerManager.equipped[itemCategory] === undefined) {
-                uiManager.uiCanvas.drawLayer.save();
-                uiManager.uiCanvas.drawLayer.beginPath();
-                uiManager.uiCanvas.drawLayer.globalAlpha = opacity;
-                uiManager.uiCanvas.drawLayer.drawImage(image, 0, 0, width * (image.width / width), height * (image.height / height), x, y, width, height);
-                uiManager.uiCanvas.drawLayer.closePath();
-                uiManager.uiCanvas.drawLayer.restore();
-            }
+            this.drawImageWithFrame(pathToImg, distLeft, 80 + iconSize * (i) + (offset * i), iconSize, iconSize, 8, opacity);
         }
     }
 
@@ -174,6 +154,7 @@ class UIManager {
                 break;
             case "buy":
                 this.interactButton.onclick = function () {
+                    gameManager.playSoundEffect("BuySound.mp3", 0.2);
                     let shopElement = waveManager.merchant.randomItemsInShop[uiManager.selectShopItem];
                     console.log(uiManager.selectShopItem)
                     if (playerManager.goldCoinsAmount >= shopElement.price) {
@@ -189,7 +170,7 @@ class UIManager {
 
     }
 
-    drawStatsOnDefaultPage() {
+    drawPlayerStatsOnDefaultPage() {
         let titleSize = 45, statsSize = 32, paddingBetweenStats = 40, paddingToTop = 160;
 
         this.drawText("Player Stats", this.uiCanvas.canvasBoundaries.right / 1.5, paddingToTop, titleSize, "center");
@@ -224,11 +205,14 @@ class UIManager {
     }
 
     drawItemsFromMerchant() {
-        let distLeft = 30, distTop = 150, iconSize = 100, iterationIndex = 0;
+        let distLeft = 30, distTop = 150, iconSize = 100, iterationIndex = 0, marginBetween = 30;
         uiManager.drawText("SHOP", uiManager.uiCanvas.canvasBoundaries.right / 2, 100, 36, "center");
+        console.log("---------------------------------------------------");
         waveManager.merchant.randomItemsInShop.forEach(shopElement => {
             let item = items[shopElement.item.split(':')[0]][shopElement.item.split(':')[1]];
-            this.drawImageWithFrame("Items/" + item.imageFileName, distLeft, distTop + (iterationIndex * iconSize) + 20 * iterationIndex, iconSize, iconSize, 4, 1);
+            console.log("distTop: " + distTop + " + (i*IconSize): " + (iterationIndex * iconSize) + " (marginBetween * i):" + (marginBetween * iterationIndex) + " = " + (distTop + (iterationIndex * iconSize) + (marginBetween * iterationIndex)));
+            this.drawImageWithFrame("Items/" + item.imageFileName, distLeft, distTop + (iterationIndex * iconSize) + marginBetween * iterationIndex, iconSize, iconSize, 8, 1);
+
 
             this.shopItemBoundaries.push({
                 left: distLeft,
@@ -238,8 +222,9 @@ class UIManager {
             });
 
             let statsText = "Int.: " + item.intelligence + " / S.C.R.: " + item.spellCastRate + " / M-Crit.: " + item.magicCrit;
-            this.drawText(statsText, distLeft + iconSize + 20, distTop + (iterationIndex * iconSize) + 20 * iterationIndex + iconSize / 2, 23, "left");
-            this.drawText("Price: " + shopElement.price + " Gold", distLeft + iconSize + 20, 25 + distTop + (iterationIndex * iconSize) + 20 * iterationIndex + iconSize / 2, 23, "left");
+            this.drawText(shopElement.item.split(':')[1], distLeft + iconSize + 20, distTop + (iterationIndex * iconSize) + marginBetween * iterationIndex + iconSize / 2 - 25, 23, "left");
+            this.drawText(statsText, distLeft + iconSize + 20, distTop + (iterationIndex * iconSize) + marginBetween * iterationIndex + iconSize / 2, 23, "left");
+            this.drawText("Price: " + shopElement.price + " Gold", distLeft + iconSize + 20, 25 + distTop + (iterationIndex * iconSize) + marginBetween * iterationIndex + iconSize / 2, 23, "left");
             iterationIndex++;
         });
 
@@ -264,17 +249,20 @@ class UIManager {
     }
 
     redrawFrameAroundItems() {
-        let distLeft = 30, distTop = 150, iconSize = 100;
+        let distLeft = 30, distTop = 150, iconSize = 100, marginBetween = 30;
         for (let i = 0; i < waveManager.merchant.randomItemsInShop.length; i++) {
+            console.log("---------------------------------------------------");
             if (i === this.selectShopItem) {
-                this.drawFrame("white", distLeft, distTop + (i * iconSize) + 20 * i, iconSize, iconSize, 4);
+                console.log("position y: " + distTop + (i * iconSize) + marginBetween * i);
+                this.drawFrame("white", distLeft, distTop + (i * iconSize) + marginBetween * i, iconSize, iconSize, 8);
             } else {
-                this.drawFrame("black", distLeft, distTop + (i * iconSize) + 20 * i, iconSize, iconSize, 4);
+                this.drawFrame("black", distLeft, distTop + (i * iconSize) + marginBetween * i, iconSize, iconSize, 8);
             }
         }
     }
 
     drawFrame(color, distLeft, distTop, width, height, lineWidth) {
+        console.log("Drawing frame at: " + distLeft + " - " + distTop);
         uiManager.uiCanvas.drawLayer.save();
         uiManager.uiCanvas.drawLayer.beginPath();
         uiManager.uiCanvas.drawLayer.strokeStyle = color;
@@ -288,5 +276,16 @@ class UIManager {
     clearShopVariables() {
         this.shopItemBoundaries = [];
         this.selectShopItem = -1;
+    }
+
+    drawGearStatsNextToIconsInSmall() {
+        let iconSize = 100, offset = 30, distLeft = 55, distTop = 100, marginBetweenStats = 37, textSize = 20;
+        for (let i = 0; i < 4; i++) {
+            if (playerManager.equipped[getItemCategoryFromIndex(i)] !== undefined) {
+                this.drawText(playerManager.equipped[getItemCategoryFromIndex(i)].intelligence, distLeft + iconSize, distTop + (i * iconSize) + offset * i, textSize, "left");
+                this.drawText(playerManager.equipped[getItemCategoryFromIndex(i)].spellCastRate, distLeft + iconSize, marginBetweenStats + distTop + (i * iconSize) + offset * i, textSize, "left");
+                this.drawText(playerManager.equipped[getItemCategoryFromIndex(i)].magicCrit, distLeft + iconSize, marginBetweenStats * 2 + distTop + (i * iconSize) + offset * i, textSize, "left");
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ class WaveManager {
 
     waveMultiplierIfOverLimit = 1;
 
-    chanceThatTheMerchantAppears = 0.2;
+    chanceThatTheMerchantAppears = 1;
     merchant;
 
     constructor() {
@@ -31,12 +31,12 @@ class WaveManager {
         this.itemsOnTheFloor.forEach(value => value.destroy());
         gameManager.magicBarrier.reactivateBarrier();
         gameManager.waveButton.disabled = true;
-        gameManager.waveButton.innerHTML = "Wave " + this.currentWaveNo + " active"
+        gameManager.waveButton.innerHTML = "Wave " + this.getCurrentWaveText() + " active"
         this.waveActive = true;
 
         this.spawnMonsters();
 
-        gameManager.titleObject.displayNewTitle("Wave " + this.currentWaveNo);
+        gameManager.titleObject.displayNewTitle("Wave " + this.getCurrentWaveText());
         if (this.merchant !== undefined) {
             this.merchant.destroy();
             this.merchant = undefined;
@@ -45,7 +45,9 @@ class WaveManager {
 
     spawnMonsters() {
         let amountOfEnemiesSpawned = 0;
-        for (let i = 0; i < this.waveMultiplierIfOverLimit; i++) {
+        let multiplierOfEnemies = (this.currentWaveNo%10 === 0?1:this.waveMultiplierIfOverLimit);
+
+        for (let i = 0; i < multiplierOfEnemies; i++) {
             waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => {
                 for (let i = 0; i < enemy.amount; i++) {
                     amountOfEnemiesSpawned++;
@@ -87,7 +89,6 @@ class WaveManager {
             this.resetWave();
         } else if (gameManager.magicBarrier.currentHealthPoints <= 0) {
             this.enemies.forEach(value => value.die())
-            gameManager.magicBarrier.currentHealthPoints = 100;
             gameManager.titleObject.displayNewTitle("Wave failed!");
             this.resetWave();
         }
@@ -95,10 +96,11 @@ class WaveManager {
 
     resetWave() {
         gameManager.magicBarrier.deactivateBarrier();
+        gameManager.magicBarrier.regen500HealthPoints();
         this.waveActive = false;
         this.defeatedEnemiesCounter = 0;
         gameManager.waveButton.disabled = false;
-        gameManager.waveButton.innerHTML = "Start wave " + this.currentWaveNo;
+        gameManager.waveButton.innerHTML = "Start wave " + this.getCurrentWaveText();
 
         let randomNumber = Math.random();
         console.log("Lucky number was " + randomNumber);
@@ -116,14 +118,18 @@ class WaveManager {
         gameManager.gameCanvas.drawLayer.font = 'bold 25px \'MedievalSharp\'';
         gameManager.gameCanvas.drawLayer.fillStyle = 'black';
         gameManager.gameCanvas.drawLayer.textAlign = 'right';
-        gameManager.gameCanvas.drawLayer.fillText("Enemies: " + this.defeatedEnemiesCounter + "/" + this.getTotalAmountOfEnemiesFromCurrentWave() * this.waveMultiplierIfOverLimit, gameCanvas.canvasBoundaries.right - 10, 30);
+        gameManager.gameCanvas.drawLayer.fillText("Enemies: " + this.defeatedEnemiesCounter + "/" + this.getTotalAmountOfEnemiesFromCurrentWave(), gameCanvas.canvasBoundaries.right - 10, 30);
         gameManager.gameCanvas.drawLayer.restore();
     }
 
     getTotalAmountOfEnemiesFromCurrentWave() {
         let sumOfEnemies = 0;
         waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => sumOfEnemies += enemy.amount);
-        return sumOfEnemies * this.waveMultiplierIfOverLimit;
+        if (this.currentWaveNo % 10 === 0) {
+            return sumOfEnemies;
+        } else {
+            return sumOfEnemies * this.waveMultiplierIfOverLimit;
+        }
     }
 
     getRandomItemNameWithTierFromItems(tier) {
@@ -140,5 +146,9 @@ class WaveManager {
         let randomCategoryNumb = Math.floor(Math.random() * 4);
         let randomItemNumb = Math.floor(Math.random() * allItems[getItemCategoryFromIndex(randomCategoryNumb)].length);
         return getItemCategoryFromIndex(randomCategoryNumb) + ":" + allItems[getItemCategoryFromIndex(randomCategoryNumb)][randomItemNumb];
+    }
+
+    getCurrentWaveText() {
+        return this.currentWaveNo + waveConfig.length*(this.waveMultiplierIfOverLimit-1);
     }
 }

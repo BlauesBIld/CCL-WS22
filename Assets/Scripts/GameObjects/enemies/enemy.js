@@ -23,6 +23,7 @@ class Enemy extends ImageObject {
         this.hpBar.enemy = this;
         this.origin.x = x;
         this.origin.y = y;
+        this.attackDamage = monsters[name].attackDamage;
         waveManager.addEnemy(this);
     }
 

@@ -2,10 +2,13 @@ class Crystal extends Enemy {
     smallerCrystals = [{}];
     smallerCrystalsSize;
 
-    constructor(name, size) {
-        super("Crystal", "./Enemies/" + name + ".png", gameManager.gameCanvas.canvasBoundaries.right / 2 - (size * waveManager.enemyDefaultSize) / 2, 100, waveManager.enemyDefaultSize * size, waveManager.enemyDefaultSize * size);
+    constructor(name) {
+        super(name, "./Enemies/" + name + ".png", getRandomPositionOnXAxis(waveManager.enemyDefaultSize * monsters[name].size), 20, waveManager.enemyDefaultSize * monsters[name].size, waveManager.enemyDefaultSize * monsters[name].size);
+        this.currentHealthPoints *= Math.sqrt(waveManager.currentWaveNo) * Math.pow(monsters[name].size,9);
+        this.maxHealthPoints = this.currentHealthPoints;
         this.smallerCrystalsSize = this.dimensions.height / 3;
         this.initializeSmallerCrystals();
+        this.movementSpeed /= Math.pow(monsters[name].size, 2);
     }
 
     update() {

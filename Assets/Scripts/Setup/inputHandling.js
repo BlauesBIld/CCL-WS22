@@ -14,6 +14,10 @@ addEventListener("keydown", function (event) {
             player.velocity.xRight = 1;
             break;
     }
+
+    if(!gameManager.musicIsPlaying){
+        gameManager.playBackgroundMusic();
+    }
 })
 
 addEventListener("keyup", function (event) {

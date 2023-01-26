@@ -3,8 +3,8 @@ class Rhino extends ImageObject{
     spriteSheetChangeSpeed = 0;
     timeStampLastSpriteSheetChanged = 0;
     isBeingPattedCurrently = false;
-    constructor() {
-        super("wall", "Rhino.png", gameCanvas.canvasBoundaries.right/2+150, gameCanvas.canvasBoundaries.bottom/2+50, 300, gameCanvas.canvasBoundaries.bottom/2-50, 530, 630, 2, true);
+    constructor(x, y, widht, height) {
+        super("wall", "Rhino.png", x, y, widht, height, 530, 630, 2, true);
     }
 
     update() {

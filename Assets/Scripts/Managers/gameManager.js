@@ -14,6 +14,7 @@ class GameManager {
 
     deltaTime = 0;
     lastFrameTimeStamp = Date.now();
+    musicIsPlaying = false;
 
     constructor() {
         console.log("Game-Manager created!");
@@ -117,12 +118,28 @@ class GameManager {
     }
 
     dropItem(name, x, y) {
-        new ItemOnFloor(name, "DroppedItem.png", x, y, 55, 55,  false);
+        new ItemOnFloor(name, "DroppedItem.png", x, y, 55, 55, false);
     }
 
     calculateDeltaTime() {
         let currentTimeStamp = Date.now();
-        this.deltaTime = (currentTimeStamp - this.lastFrameTimeStamp)/10;
+        this.deltaTime = (currentTimeStamp - this.lastFrameTimeStamp) / 10;
         this.lastFrameTimeStamp = currentTimeStamp;
+    }
+
+    playBackgroundMusic() {
+        if (!this.musicIsPlaying) {
+            let backgroundAudio = new Audio("./Audio/IngameMusic.mp3");
+            backgroundAudio.play();
+            backgroundAudio.loop = true;
+            this.musicIsPlaying = true;
+        }
+    }
+
+    playSoundEffect(fileName, volume, speed = 1) {
+        let audioFile = new Audio("./Audio/" + fileName);
+        audioFile.playbackRate = 1/speed;
+        audioFile.volume = volume;
+        audioFile.play();
     }
 }

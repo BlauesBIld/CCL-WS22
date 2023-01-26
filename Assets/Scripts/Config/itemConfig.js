@@ -4,21 +4,21 @@ items = {
             "imageFileName": "WoodenRod.png",
             "intelligence": 17,
             "spellCastRate": 200,
-            "magicCrit": 12,
+            "magicCrit": 8,
             "tier": 1
         },
         "Crystall Ball": {
             "imageFileName": "CrystallBall.png",
             "intelligence": 20,
             "spellCastRate": 180,
-            "magicCrit": 25,
+            "magicCrit": 18,
             "tier": 1
         },
         "Dejans Holy Bible": {
             "imageFileName": "DBook.png",
             "intelligence": 22,
             "spellCastRate": 120,
-            "magicCrit": 8,
+            "magicCrit": 5,
             "tier": 1
         },
     },
@@ -35,14 +35,14 @@ items = {
             "imageFileName": "HatOfClassicness.png",
             "intelligence": 12,
             "spellCastRate": 20,
-            "magicCrit": 5,
+            "magicCrit": 3,
             "tier": 1
         },
         "Priest Hat": {
             "imageFileName": "PriestHat.png",
             "intelligence": 0,
             "spellCastRate": 60,
-            "magicCrit": 20,
+            "magicCrit": 14,
             "tier": 1
         },
     },
@@ -52,14 +52,14 @@ items = {
             "imageFileName": "DejansRobe.png",
             "intelligence": 10,
             "spellCastRate": 50,
-            "magicCrit": 10,
+            "magicCrit": 6,
             "tier": 1
         },
         "Robe Of Warmth": {
             "imageFileName": "RobeOfWarmth.png",
             "intelligence": 5,
             "spellCastRate": 100,
-            "magicCrit": 5,
+            "magicCrit": 3,
             "tier": 1
         },
         "Robe Of Wisdom": {
@@ -72,32 +72,32 @@ items = {
     },
 
     "accessory": {
-        "DejansRing": {
+        "Dejans Ring": {
             "imageFileName": "DejansRing.png",
             "intelligence": 5,
             "spellCastRate": 50,
-            "magicCrit": 15,
+            "magicCrit": 8,
             "tier": 1
         },
-        "ZeysRing": {
+        "Zeys Ring": {
             "imageFileName": "ZeysRing.png",
             "intelligence": 0,
             "spellCastRate": 0,
             "magicCrit": 0,
             "tier": 1
         },
-        "FelixRing": {
+        "Felix Ring": {
             "imageFileName": "FelixRing.png",
             "intelligence": 3,
             "spellCastRate": 70,
-            "magicCrit": 5,
+            "magicCrit": 3,
             "tier": 1
         },
-        "EliasRing": {
+        "Elias Ring": {
             "imageFileName": "EliasRing.png",
             "intelligence": 6,
             "spellCastRate": 20,
-            "magicCrit": 10,
+            "magicCrit": 6,
             "tier": 1
         },
     }

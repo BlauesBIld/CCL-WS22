@@ -1,3 +1,5 @@
+let lastFireBallAudioPlayed = 0;
+
 class AttackBall extends ImageObject {
     directionX = 0;
     directionY = 0;
@@ -30,6 +32,7 @@ class AttackBall extends ImageObject {
         this.directionYNormalised = (this.directionY) / directionVectorLength;
 
         this.timeStampCreated = Date.now();
+        this.playPlayFireBallAudio();
     }
 
     update() {
@@ -53,12 +56,21 @@ class AttackBall extends ImageObject {
 
     onCollision(otherObject) {
         if (otherObject instanceof Enemy) {
-            if(getRandomInt(100) < playerManager.getMagicCrit()){
-                otherObject.receiveDamage(playerManager.getIntelligence()*2);
+            if (getRandomInt(100) < playerManager.getMagicCrit()) {
+                otherObject.receiveDamage(playerManager.getIntelligence() * 2);
             } else {
                 otherObject.receiveDamage(playerManager.getIntelligence());
             }
             this.destroy();
         }
+    }
+
+    destroy() {
+        super.destroy();
+    }
+
+    playPlayFireBallAudio() {
+        gameManager.playSoundEffect("FireBall" + lastFireBallAudioPlayed % 3 + ".mp3", 0.02);
+        lastFireBallAudioPlayed++;
     }
 }

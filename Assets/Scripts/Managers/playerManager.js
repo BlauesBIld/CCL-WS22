@@ -1,6 +1,6 @@
 class PlayerManager {
     intelligence = {
-        base: 5,
+        base: 15,
         value: 0
     };
 
@@ -52,28 +52,40 @@ class PlayerManager {
     }
 
     calculateStat(statName) {
-        this[statName].value = this[statName].base;
-        let additionForCurrentLevel = (Math.sqrt(this.currentLevel)*10);
-        if(statName === "magicCrit"){
-            additionForCurrentLevel = this.currentLevel;
+        let additionForCurrentLevel = 0;
+        switch (statName) {
+            case "intelligence":
+                additionForCurrentLevel = this.currentLevel * 3;
+                break;
+            case "spellCastRate":
+                additionForCurrentLevel = this.currentLevel * 5;
+                break;
+            case "magicCrit":
+                additionForCurrentLevel = this.currentLevel / 0.1;
+                break;
         }
+        this[statName].value = this[statName].base + additionForCurrentLevel;
         if (this.equipped.weapon !== undefined) {
-            this[statName].value += this.equipped.weapon[statName] + additionForCurrentLevel;
+            this[statName].value += this.equipped.weapon[statName];
         }
         if (this.equipped.robe !== undefined) {
-            this[statName].value += this.equipped.robe[statName] + additionForCurrentLevel;
+            this[statName].value += this.equipped.robe[statName];
         }
         if (this.equipped.hat !== undefined) {
-            this[statName].value += this.equipped.hat[statName] + additionForCurrentLevel;
+            this[statName].value += this.equipped.hat[statName];
         }
         if (this.equipped.accessory !== undefined) {
-            this[statName].value += this.equipped.accessory[statName] + additionForCurrentLevel;
+            this[statName].value += this.equipped.accessory[statName];
         }
     }
 
     equipItem(itemType, itemName) {
         this.equipped[itemType] = items[itemType][itemName];
-        console.log(this.equipped);
+        gameManager.playSoundEffect("EquipItem.mp3", 0.1);
+        let equipSound = new Audio("./Audio/EquipItem.mp3");
+        equipSound.volume = 0.5;
+        equipSound.play();
+
         uiManager.initializePage();
     }
 
@@ -85,7 +97,7 @@ class PlayerManager {
         return 600 - this.spellCastRate.value;
     }
 
-    getSpellCastRateToDisplay(){
+    getSpellCastRateToDisplay() {
         return this.spellCastRate.value;
     }
 

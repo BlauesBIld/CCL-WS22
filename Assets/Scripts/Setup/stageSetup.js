@@ -22,7 +22,11 @@ gameManager.setCastle(castleObj);
 
 let playerHeight = 150,
     playerWidth = 100,
-    player = new Player(gameCanvas.canvasBoundaries.right / 2 - playerWidth / 2, gameCanvas.canvasBoundaries.bottom - playerHeight - 20, playerWidth, playerHeight);
+    playerSpawnPoint = {
+        x: gameCanvas.canvasBoundaries.right / 2 - playerWidth / 2,
+        y: gameCanvas.canvasBoundaries.bottom - playerHeight - 20
+    }
+player = new Player(playerSpawnPoint.x, playerSpawnPoint.y, playerWidth, playerHeight);
 
 let gameCanvasLeft = gameCanvas.canvasHTMLElement.offsetLeft + gameCanvas.canvasHTMLElement.clientLeft,
     gameCanvasTop = gameCanvas.canvasHTMLElement.offsetTop + gameCanvas.canvasHTMLElement.clientTop;
@@ -47,28 +51,24 @@ uiCanvas.canvasHTMLElement.addEventListener("mousemove", function (event) {
 });
 
 gameCanvas.canvasHTMLElement.addEventListener("mousedown", function (event) {
-    player.isShooting = true;
+    if (event.button === 0) {
+        player.isShooting = true;
+    }
 });
 
 gameCanvas.canvasHTMLElement.addEventListener("mouseup", function (event) {
-    player.isShooting = false;
+    if (event.button === 0) {
+        player.isShooting = false;
+    }
 });
 
 let titleObject = new FadingTitleText();
 gameManager.setTitleObject(titleObject);
 
-playerManager.equipItem("weapon", "Wooden Rod");
 gameManager.dropItem(waveManager.getRandomItemNameWithTierFromItems(1), 650, 350);
+uiManager.initializePage();
+
 setUpBorderWalls();
-waveManager.merchant = new Merchant();
-
-function setUpBorderWalls() {
-    new GameObject("wall", 0, 0, gameCanvas.canvasBoundaries.right, 0);
-    new GameObject("wall", 0, 0, 0, gameCanvas.canvasBoundaries.bottom);
-    new GameObject("wall", 0, gameCanvas.canvasBoundaries.bottom, gameCanvas.canvasBoundaries.right, 0);
-    new GameObject("wall", gameCanvas.canvasBoundaries.right, 0, 0, gameCanvas.canvasBoundaries.bottom);
-}
-
 requestAnimationFrame(gameManager.gameLoop);
 
 function setupRandomGrasTiles() {
@@ -78,6 +78,13 @@ function setupRandomGrasTiles() {
             new GrasTile("gras" + i, "Gras" + grasTileIndex + ".png", grasTileSize, gameCanvas.canvasBoundaries.right / 12 * i, gameCanvas.canvasBoundaries.bottom / 12 * j);
         }
     }
+}
+
+function setUpBorderWalls() {
+    new GameObject("wall", 0, 0, gameCanvas.canvasBoundaries.right, 0);
+    new GameObject("wall", 0, 0, 0, gameCanvas.canvasBoundaries.bottom);
+    new GameObject("wall", 0, gameCanvas.canvasBoundaries.bottom, gameCanvas.canvasBoundaries.right, 0);
+    new GameObject("wall", gameCanvas.canvasBoundaries.right, 0, 0, gameCanvas.canvasBoundaries.bottom);
 }
 
 function getRandomInt(max) {

@@ -2,6 +2,12 @@ html{
     cursor: url('../../Assets/Sprites/mouseIconScaled.png'), auto;
 }
 
+#controlsImage{
+    width: 30%;
+    height: 30%;
+    margin: 30px;
+}
+
 .startScreenText{
     padding-left: 50px;
     padding-right: 50px;
