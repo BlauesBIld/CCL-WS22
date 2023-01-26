@@ -25,6 +25,11 @@ class Enemy extends ImageObject {
         this.origin.y = y;
         this.attackDamage = monsters[name].attackDamage;
         waveManager.addEnemy(this);
+
+        this.currentHealthPoints *= Math.sqrt(waveManager.currentWaveNo)*1.5 * Math.pow(monsters[name].size,5);
+        this.maxHealthPoints = this.currentHealthPoints;
+        this.movementSpeed = 0.5;
+        this.movementSpeed /= Math.pow(monsters[name].size, 2);
     }
 
     update() {
@@ -101,7 +106,10 @@ class Enemy extends ImageObject {
     }
 
     getSizeName(){
-        let sourcePathSplit = this.image.src.split('/');
-        return(sourcePathSplit[sourcePathSplit.length-1].split('.')[0].substring(this.name.length));
+        for (let i = 0; i < this.sizes.length; i++) {
+            if (this.name.includes(this.sizes[i])){
+                return this.sizes[i];
+            }
+        }
     }
 }

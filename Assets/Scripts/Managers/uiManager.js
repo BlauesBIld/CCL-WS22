@@ -156,12 +156,10 @@ class UIManager {
                 this.interactButton.onclick = function () {
                     gameManager.playSoundEffect("BuySound.mp3", 0.2);
                     let shopElement = waveManager.merchant.randomItemsInShop[uiManager.selectShopItem];
-                    console.log(uiManager.selectShopItem)
                     if (playerManager.goldCoinsAmount >= shopElement.price) {
                         waveManager.merchant.randomItemsInShop.splice(uiManager.selectShopItem, 1);
                         playerManager.equipItem(shopElement.item.split(':')[0], shopElement.item.split(':')[1]);
                         playerManager.goldCoinsAmount -= shopElement.price;
-                        console.log(uiManager.selectShopItem);
                         uiManager.initializePage();
                     }
                 }
@@ -207,10 +205,8 @@ class UIManager {
     drawItemsFromMerchant() {
         let distLeft = 30, distTop = 150, iconSize = 100, iterationIndex = 0, marginBetween = 30;
         uiManager.drawText("SHOP", uiManager.uiCanvas.canvasBoundaries.right / 2, 100, 36, "center");
-        console.log("---------------------------------------------------");
         waveManager.merchant.randomItemsInShop.forEach(shopElement => {
             let item = items[shopElement.item.split(':')[0]][shopElement.item.split(':')[1]];
-            console.log("distTop: " + distTop + " + (i*IconSize): " + (iterationIndex * iconSize) + " (marginBetween * i):" + (marginBetween * iterationIndex) + " = " + (distTop + (iterationIndex * iconSize) + (marginBetween * iterationIndex)));
             this.drawImageWithFrame("Items/" + item.imageFileName, distLeft, distTop + (iterationIndex * iconSize) + marginBetween * iterationIndex, iconSize, iconSize, 8, 1);
 
 
@@ -251,9 +247,7 @@ class UIManager {
     redrawFrameAroundItems() {
         let distLeft = 30, distTop = 150, iconSize = 100, marginBetween = 30;
         for (let i = 0; i < waveManager.merchant.randomItemsInShop.length; i++) {
-            console.log("---------------------------------------------------");
             if (i === this.selectShopItem) {
-                console.log("position y: " + distTop + (i * iconSize) + marginBetween * i);
                 this.drawFrame("white", distLeft, distTop + (i * iconSize) + marginBetween * i, iconSize, iconSize, 8);
             } else {
                 this.drawFrame("black", distLeft, distTop + (i * iconSize) + marginBetween * i, iconSize, iconSize, 8);
@@ -262,7 +256,6 @@ class UIManager {
     }
 
     drawFrame(color, distLeft, distTop, width, height, lineWidth) {
-        console.log("Drawing frame at: " + distLeft + " - " + distTop);
         uiManager.uiCanvas.drawLayer.save();
         uiManager.uiCanvas.drawLayer.beginPath();
         uiManager.uiCanvas.drawLayer.strokeStyle = color;

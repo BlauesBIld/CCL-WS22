@@ -2,7 +2,7 @@ class FadingTitleText extends GameObject {
     text;
     currentTransparancy;
     timeStampCreated;
-    delayToStartDissappearing = 1500;
+    delayToStartDisappearing = 1500;
 
     constructor() {
         super("title", gameManager.gameCanvas.canvasBoundaries.right/2, gameManager.gameCanvas.canvasBoundaries.bottom/3, 0, 0);
@@ -22,7 +22,7 @@ class FadingTitleText extends GameObject {
     }
 
     update() {
-        if(this.timeStampCreated + this.delayToStartDissappearing < Date.now()) {
+        if(this.timeStampCreated + this.delayToStartDisappearing < Date.now()) {
             this.currentTransparancy -= 0.003;
             if (this.currentTransparancy <= 0) {
                 this.destroy();

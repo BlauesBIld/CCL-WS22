@@ -58,18 +58,28 @@ waveConfig = [
         "enemies": [
             {
                 "type": "Slime",
+                "name": "SlimeMiddle",
+                "amount": 2
+            },
+            {
+                "type": "Slime",
                 "name": "SlimeSmol",
                 "amount": 3
             },
             {
                 "type": "Slime",
                 "name": "SlimeMiddle",
-                "amount": 6
+                "amount": 1
             },
             {
                 "type": "Slime",
                 "name": "SlimeSmol",
                 "amount": 3
+            },
+            {
+                "type": "Slime",
+                "name": "SlimeMiddle",
+                "amount": 2
             }
         ]
     },
@@ -144,12 +154,12 @@ waveConfig = [
             {
                 "type": "Slime",
                 "name": "SlimeMiddle",
-                "amount": 5
+                "amount": 4
             },
             {
                 "type": "Slime",
                 "name": "SlimeBig",
-                "amount": 3
+                "amount": 2
             },
             {
                 "type": "Slime",
@@ -159,7 +169,7 @@ waveConfig = [
             {
                 "type": "Slime",
                 "name": "SlimeMiddle",
-                "amount": 5
+                "amount": 4
             },
             {
                 "type": "Slime",
@@ -185,16 +195,6 @@ waveConfig = [
                 "type": "Crystal",
                 "name": "CrystalSmol",
                 "amount": 5
-            }
-        ]
-    },
-
-    {
-        "enemies": [
-            {
-                "type": "Crystal",
-                "name": "CrystalSmol",
-                "amount": 10
             }
         ]
     },

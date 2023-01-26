@@ -61,7 +61,7 @@ class PlayerManager {
                 additionForCurrentLevel = this.currentLevel * 5;
                 break;
             case "magicCrit":
-                additionForCurrentLevel = this.currentLevel / 0.1;
+                additionForCurrentLevel = this.currentLevel * 0.1;
                 break;
         }
         this[statName].value = this[statName].base + additionForCurrentLevel;

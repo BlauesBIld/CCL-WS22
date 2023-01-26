@@ -16,8 +16,10 @@ class WaveManager {
 
     waveMultiplierIfOverLimit = 1;
 
-    chanceThatTheMerchantAppears = 1;
+    chanceThatTheMerchantAppears = 0.15;
     merchant;
+
+    currentBoss = undefined;
 
     constructor() {
         console.log("Enemy-Manager created!");
@@ -45,7 +47,7 @@ class WaveManager {
 
     spawnMonsters() {
         let amountOfEnemiesSpawned = 0;
-        let multiplierOfEnemies = (this.currentWaveNo%10 === 0?1:this.waveMultiplierIfOverLimit);
+        let multiplierOfEnemies = (this.currentWaveNo % 10 === 0 ? 1 : this.waveMultiplierIfOverLimit);
 
         for (let i = 0; i < multiplierOfEnemies; i++) {
             waveConfig[this.currentWaveNo - 1].enemies.forEach(enemy => {
@@ -64,30 +66,44 @@ class WaveManager {
     spawnMonsterFromType(enemy) {
         switch (enemy.type) {
             case "Slime":
-                new Slime(enemy.name, enemy.size);
+                new Slime(enemy.name);
                 break;
             case "SlimeKing":
-                new SlimeKing(enemy.name, enemy.size);
+                new SlimeKing(enemy.name);
                 break;
             case "Crystal":
-                new Crystal(enemy.name, enemy.size);
+                new Crystal(enemy.name);
                 break;
             case "CrystalKing":
-                new CrystalKing(enemy.name, enemy.size);
+                new CrystalKing(enemy.name);
                 break;
         }
     }
 
     checkIfWaveDone() {
-        if (this.defeatedEnemiesCounter >= this.getTotalAmountOfEnemiesFromCurrentWave()) {
-            this.currentWaveNo++;
-            if (this.currentWaveNo > waveConfig.length) {
-                this.currentWaveNo = 1;
-                this.waveMultiplierIfOverLimit++;
+        if (this.currentBoss !== undefined) {
+            if(this.currentBoss.defeated === true){
+                this.currentWaveNo++;
+                if (this.currentWaveNo > waveConfig.length) {
+                    this.currentWaveNo = 1;
+                    this.waveMultiplierIfOverLimit++;
+                }
+                gameManager.titleObject.displayNewTitle("Wave cleared!");
+                this.resetWave();
+                this.currentBoss = undefined;
             }
-            gameManager.titleObject.displayNewTitle("Wave cleared!");
-            this.resetWave();
-        } else if (gameManager.magicBarrier.currentHealthPoints <= 0) {
+        } else {
+            if (this.defeatedEnemiesCounter >= this.getTotalAmountOfEnemiesFromCurrentWave()) {
+                this.currentWaveNo++;
+                if (this.currentWaveNo > waveConfig.length) {
+                    this.currentWaveNo = 1;
+                    this.waveMultiplierIfOverLimit++;
+                }
+                gameManager.titleObject.displayNewTitle("Wave cleared!");
+                this.resetWave();
+            }
+        }
+        if (gameManager.magicBarrier.currentHealthPoints <= 0) {
             this.enemies.forEach(value => value.die())
             gameManager.titleObject.displayNewTitle("Wave failed!");
             this.resetWave();
@@ -149,6 +165,6 @@ class WaveManager {
     }
 
     getCurrentWaveText() {
-        return this.currentWaveNo + waveConfig.length*(this.waveMultiplierIfOverLimit-1);
+        return this.currentWaveNo + waveConfig.length * (this.waveMultiplierIfOverLimit - 1);
     }
 }
