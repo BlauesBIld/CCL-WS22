@@ -16,7 +16,7 @@ class WaveManager {
 
     waveMultiplierIfOverLimit = 1;
 
-    chanceThatTheMerchantAppears = 0.15;
+    chanceThatTheMerchantAppears = 0.5;
     merchant;
 
     currentBoss = undefined;

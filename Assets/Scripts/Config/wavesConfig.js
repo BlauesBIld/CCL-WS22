@@ -114,6 +114,26 @@ waveConfig = [
             {
                 "type": "Slime",
                 "name": "SlimeMiddle",
+                "amount": 2
+            },
+            {
+                "type": "Slime",
+                "name": "SlimeBig",
+                "amount": 1
+            }
+        ]
+    },
+
+    {
+        "enemies": [
+            {
+                "type": "Slime",
+                "name": "SlimeSmol",
+                "amount": 3
+            },
+            {
+                "type": "Slime",
+                "name": "SlimeMiddle",
                 "amount": 3
             },
             {
@@ -134,47 +154,12 @@ waveConfig = [
             {
                 "type": "Slime",
                 "name": "SlimeMiddle",
-                "amount": 4
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeBig",
-                "amount": 2
-            }
-        ]
-    },
-
-    {
-        "enemies": [
-            {
-                "type": "Slime",
-                "name": "SlimeSmol",
-                "amount": 4
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeMiddle",
-                "amount": 4
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeBig",
-                "amount": 2
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeSmol",
-                "amount": 4
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeMiddle",
-                "amount": 4
-            },
-            {
-                "type": "Slime",
-                "name": "SlimeBig",
                 "amount": 3
+            },
+            {
+                "type": "Slime",
+                "name": "SlimeBig",
+                "amount": 2
             }
         ]
     },
@@ -309,17 +294,17 @@ waveConfig = [
             {
                 "type": "Crystal",
                 "name": "CrystalSmol",
-                "amount": 4
+                "amount": 3
             },
             {
                 "type": "Crystal",
                 "name": "CrystalMiddle",
-                "amount": 4
+                "amount": 3
             },
             {
                 "type": "Crystal",
                 "name": "CrystalBig",
-                "amount": 2
+                "amount": 1
             }
         ]
     },
@@ -334,12 +319,12 @@ waveConfig = [
             {
                 "type": "Crystal",
                 "name": "CrystalMiddle",
-                "amount": 5
+                "amount": 2
             },
             {
                 "type": "Crystal",
                 "name": "CrystalBig",
-                "amount": 3
+                "amount": 1
             },
             {
                 "type": "Crystal",
@@ -349,12 +334,12 @@ waveConfig = [
             {
                 "type": "Crystal",
                 "name": "CrystalMiddle",
-                "amount": 5
+                "amount": 2
             },
             {
                 "type": "Crystal",
                 "name": "CrystalBig",
-                "amount": 3
+                "amount": 1
             }
         ]
     },
